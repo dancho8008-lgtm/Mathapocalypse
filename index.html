@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mathapocalypse</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app">
+    <header class="hud">
+      <div class="hud-block">
+        <span class="label">Точки</span>
+        <strong id="score">5</strong>
+      </div>
+      <div class="hud-block">
+        <span class="label">Режим</span>
+        <strong id="level">Умножение 1 - 100</strong>
+      </div>
+      <div class="hud-block">
+        <span class="label">Оставащо време</span>
+        <strong id="turn-timer">Изкл.</strong>
+      </div>
+      <div class="hud-block">
+        <span class="label">Лимит</span>
+        <strong id="timer-limit">Без таймер</strong>
+      </div>
+    </header>
+
+    <main class="game-shell">
+      <section class="left-panel">
+        <div class="brand">
+          <img class="game-logo" src="logo.svg" alt="Mathapocalypse logo">
+          <div class="brand-copy">
+            <p class="eyebrow">Zombie Math Defense</p>
+            <h1 class="game-title">
+              <span class="drip drip-1"></span>
+              <span class="drip drip-2"></span>
+              <span class="drip drip-3"></span>
+              Mathapocalypse
+            </h1>
+          </div>
+        </div>
+
+        <form id="settings-form" class="settings-panel">
+          <h2>Настройки</h2>
+
+          <label class="setting-row">
+            <span>Операция</span>
+            <select id="setting-operation">
+              <option value="multiply" selected>Умножение</option>
+              <option value="divide">Деление</option>
+              <option value="add">Събиране</option>
+              <option value="subtract">Изваждане</option>
+            </select>
+          </label>
+
+          <div id="multiply-settings" class="operation-settings">
+            <div class="setting-range">
+              <label class="setting-row">
+                <span>Решения от</span>
+                <input type="number" id="setting-multiply-answer-min" min="1" value="1">
+              </label>
+
+              <label class="setting-row">
+                <span>Решения до</span>
+                <input type="number" id="setting-multiply-answer-max" min="1" value="100">
+              </label>
+            </div>
+
+            <label class="setting-check">
+              <input type="checkbox" id="setting-single-digit-only" checked>
+              <span>Само с едноцифрени множители</span>
+            </label>
+          </div>
+
+          <div id="add-settings" class="operation-settings hidden-panel">
+            <div class="setting-range">
+              <label class="setting-row">
+                <span>Решения от</span>
+                <input type="number" id="setting-add-answer-min" min="1" value="1">
+              </label>
+
+              <label class="setting-row">
+                <span>Решения до</span>
+                <input type="number" id="setting-add-answer-max" min="1" value="100">
+              </label>
+            </div>
+          </div>
+
+          <div id="subtract-settings" class="operation-settings hidden-panel">
+            <div class="setting-range">
+              <label class="setting-row">
+                <span>Умаляемо до</span>
+                <input type="number" id="setting-subtract-minuend-digits" min="1" max="6" value="2">
+              </label>
+
+              <label class="setting-row">
+                <span>Умалител до</span>
+                <input type="number" id="setting-subtract-subtrahend-digits" min="1" max="6" value="2">
+              </label>
+            </div>
+          </div>
+
+          <div id="divide-settings" class="operation-settings hidden-panel">
+            <div class="setting-range">
+              <label class="setting-row">
+                <span>Делимо до</span>
+                <input type="number" id="setting-divide-dividend-digits" min="1" max="6" value="2">
+              </label>
+
+              <label class="setting-row">
+                <span>Делител до</span>
+                <input type="number" id="setting-divide-divisor-digits" min="1" max="6" value="1">
+              </label>
+            </div>
+          </div>
+
+          <label class="setting-check">
+            <input type="checkbox" id="setting-timer-enabled">
+            <span>Включи време за отговор</span>
+          </label>
+
+          <div class="setting-range">
+            <label class="setting-row">
+              <span>Приоритетна цифра</span>
+              <input type="number" id="setting-priority-digit" min="0" max="9" placeholder="няма">
+            </label>
+
+            <label class="setting-row">
+              <span>Процент с тази цифра</span>
+              <input type="number" id="setting-priority-percent" min="0" max="100" value="0">
+            </label>
+          </div>
+
+          <label class="setting-row">
+            <span>Секунди за стрелба</span>
+            <input type="number" id="setting-timer-seconds" min="6" max="60" value="10">
+          </label>
+
+          <label class="setting-row">
+            <span>Сила на звука</span>
+            <input type="range" id="setting-volume" min="0" max="100" value="75">
+          </label>
+
+          <button type="submit" id="apply-settings">Започни с тези настройки</button>
+        </form>
+      </section>
+
+      <section class="arena-wrap">
+        <div id="arena" class="arena">
+          <div class="arena-photo" aria-hidden="true">
+            <img id="arena-photo-img" alt="">
+          </div>
+          <div class="crosshair" id="crosshair"></div>
+          <div class="safe-zone"></div>
+          <div class="turret" id="turret">
+            <div class="turret-barrel"></div>
+            <div class="turret-core"></div>
+          </div>
+          <div class="launcher-zone">
+            <div class="launcher-label">Ракети</div>
+            <div class="rocket-rack" id="rocket-rack"></div>
+          </div>
+          <div id="projectiles"></div>
+          <div id="loot-layer" class="loot-layer"></div>
+          <div id="zombies"></div>
+          <div id="fireworks" class="fireworks"></div>
+          <div id="overlay" class="overlay hidden">
+            <div class="overlay-card">
+              <h2 id="overlay-title"></h2>
+              <p id="overlay-text"></p>
+              <button id="restart-btn">Играй пак</button>
+            </div>
+          </div>
+        </div>
+
+        <section class="instructions-panel">
+          <h2>Как се играе</h2>
+          <p class="instructions">
+            Избираш ракета с лява и дясна стрелка. Средната ракета е заредена в оръдието.
+            Насочи с мишката, стреляй с левия бутон и уцели зомбито с правилния отговор.
+          </p>
+          <ul class="rules">
+            <li>По подразбиране играта започва с умножение, решения от 1 до 100 и само с едноцифрени множители.</li>
+            <li>За събиране избираш диапазон на решенията.</li>
+            <li>За изваждане задаваш колко цифрени най-много да са умаляемото и умалителят.</li>
+            <li>За деление задаваш колко цифрени най-много да са делимото и делителят.</li>
+            <li>Умаляемото, умалителят, делимото и делителят могат да бъдат по-малки или равни на зададеното ограничение.</li>
+          </ul>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
